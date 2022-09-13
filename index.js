@@ -14,13 +14,16 @@ const { dbConnection } = require('./database/config');
 const app = express();
 
 // Configurar CORS
-app.use(cors())
+app.use(cors());
+
+// Lectura y parseo del body
+app.use(express.json());
 
 // Conectar a la base de datos
 dbConnection();
 
 // Rutas
-app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/productos', require('./routes/productos'));
 
 // Levantamos el servidor
 app.listen(process.env.PORT, () => {

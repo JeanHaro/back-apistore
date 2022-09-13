@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 // Esquema del usuario
-const productos = Schema({
+const ProductoSchema = Schema({
     image: {
         type: String,
     },
@@ -18,3 +18,5 @@ const productos = Schema({
         require: true
     }
 })
+
+module.exports = model('Producto', ProductoSchema)

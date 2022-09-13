@@ -5,11 +5,12 @@
 const { Router } = require('express');
 
 // Controllers
-const { getUsuarios } = require('../controllers/usuarios');
+const { getProductos, crearProducto } = require('../controllers/productos');
 
 const router = Router();
 
 // Rutas
-router.get('/', getUsuarios);
+router.get('/', getProductos);
+router.post('/', crearProducto);
 
 module.exports = router;
