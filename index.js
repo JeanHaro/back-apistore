@@ -20,14 +20,7 @@ app.use(cors())
 dbConnection();
 
 // Rutas
-app.get('/', (request, response) => {
-    response.status(400).json({
-        // Todo lo hizo correcto
-        ok: true,
-        // Mensaje de respuesta
-        msg: 'Hola mundo'
-    })
-})
+app.use('/api/usuarios', require('./routes/usuarios'));
 
 // Levantamos el servidor
 app.listen(process.env.PORT, () => {
