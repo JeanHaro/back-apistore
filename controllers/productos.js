@@ -1,3 +1,4 @@
+const { response } = require('express');
 const { validationResult } = require('express-validator');
 
 // Modelo
@@ -49,7 +50,59 @@ const crearProducto = async (request, response) => {
     }
 }
 
+const actualizarProducto = async (request, response) => {
+    const uid = request.params.id;
+
+    try {
+        const productoDB = await Producto.findById(uid);
+        
+        // Si no lo encuentra
+        if (!productoDB) {
+            return response.status(404).json({
+                ok: false,
+                msg: 'No existe un producto por ese id'
+            })
+        }
+
+        const campos = request.body;
+
+        // Si el nombre es igual que el que tiene, elimina este campo, ya que no se actualizará
+        if (productoDB.title === request.body.title) {
+            delete campos.title;
+        }  else {
+            const existeNombre = await Producto.findOne({
+                title: request.body.title
+            })
+
+            // Si existe el nombre
+            if (existeNombre) {
+                return response.status(400).json({
+                    ok: false,
+                    msg: 'Ya existe ese nombre del producto'
+                })
+            }
+        }
+        
+        // new: true - para indicar que siempre regrese el nuevo
+        const productoActualizado = await Producto.findByIdAndUpdate(uid, campos, { new: true });
+
+
+        response.json({
+            ok: true,
+            productoActualizado
+        })
+    } catch (error) {
+        console.log(error);
+
+        response.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+    }
+}
+
 module.exports = {
     getProductos,
-    crearProducto
+    crearProducto,
+    actualizarProducto
 }
