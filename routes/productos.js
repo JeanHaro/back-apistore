@@ -11,7 +11,7 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 // Controllers
-const { getProductos, crearProducto, actualizarProducto } = require('../controllers/productos');
+const { getProductos, crearProducto, actualizarProducto, borrarProducto } = require('../controllers/productos');
 
 const router = Router();
 
@@ -32,5 +32,8 @@ router.put('/:id', [
     check('price', 'El precio del producto es requerido').not().isEmpty(),
     check('description', 'La descripción del producto es requerido').not().isEmpty()
 ], actualizarProducto);
+
+// Eliminar producto
+router.delete('/:id', borrarProducto);
 
 module.exports = router;

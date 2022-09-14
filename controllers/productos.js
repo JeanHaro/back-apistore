@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 // Modelo
 const Producto = require('../models/producto');
 
+// Obtener productos
 const getProductos = async (request, response) => {
     // Obtener todos los productos
     const productos = await Producto.find({}, 'title price description');
@@ -14,6 +15,7 @@ const getProductos = async (request, response) => {
     })
 }
 
+// Crear producto
 const crearProducto = async (request, response) => {
     // console.log(request.body);
     // Traemos los valores
@@ -50,6 +52,7 @@ const crearProducto = async (request, response) => {
     }
 }
 
+// Actualizar producto
 const actualizarProducto = async (request, response) => {
     const uid = request.params.id;
 
@@ -87,7 +90,6 @@ const actualizarProducto = async (request, response) => {
         // new: true - para indicar que siempre regrese el nuevo
         const productoActualizado = await Producto.findByIdAndUpdate(uid, campos, { new: true });
 
-
         response.json({
             ok: true,
             productoActualizado
@@ -102,8 +104,41 @@ const actualizarProducto = async (request, response) => {
     }
 }
 
+// Eliminar producto
+const borrarProducto = async (request, response) => {
+    const uid = request.params.id;
+
+    try {
+        // Buscar el id
+        const productoDB = await Producto.findById(uid);
+
+        // Si no encuentra el usuario
+        if (!productoDB) {
+            return response.status(404).json({
+                ok: false,
+                msg: 'No existe un usuario por ese id'
+            })
+        }
+
+        await Producto.findByIdAndDelete(uid);
+
+        response.json({
+            ok: true,
+            umsg: 'Usuario eliminado'
+        })
+    } catch (error) {
+        console.log(error);
+        
+        response.status(500).json({
+            ok: false,
+            msg: 'Hable con el admin'
+        })
+    }
+}
+
 module.exports = {
     getProductos,
     crearProducto,
-    actualizarProducto
+    actualizarProducto,
+    borrarProducto
 }
