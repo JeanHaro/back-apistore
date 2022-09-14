@@ -1,3 +1,5 @@
+const { validationResult } = require('express-validator');
+
 // Modelo
 const Producto = require('../models/producto');
 
@@ -15,6 +17,16 @@ const crearProducto = async (request, response) => {
     // console.log(request.body);
     // Traemos los valores
     const { title, price, description } = request.body;
+
+    const errores = validationResult(request);
+
+    // Si el  campo de los errores no están vacíos
+    if (!errores.isEmpty()) {
+        return response.status(400).json({
+            ok: false,
+            errors: errores.mapped()
+        })
+    }
 
     try {
         // Busca un titulo con el mismo nombre y te manda un valor boolean
