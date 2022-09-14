@@ -7,6 +7,9 @@ const { Router } = require('express');
 // Validación
 const { check } = require('express-validator');
 
+// Middlewares
+const { validarCampos } = require('../middlewares/validar-campos');
+
 // Controllers
 const { getProductos, crearProducto } = require('../controllers/productos');
 
@@ -19,7 +22,8 @@ router.get('/', getProductos);
 router.post('/', [
     check('title', 'El nombre del producto es requerido').not().isEmpty(),
     check('price', 'El precio del producto es requerido').not().isEmpty(),
-    check('description', 'La descripción del producto es requerido').not().isEmpty()
+    check('description', 'La descripción del producto es requerido').not().isEmpty(),
+    validarCampos
 ], crearProducto);
 
 module.exports = router;
