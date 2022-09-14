@@ -64,12 +64,10 @@ const actualizarProducto = async (request, response) => {
             })
         }
 
-        const campos = request.body;
+        const { title, ...campos } = request.body;
 
-        // Si el nombre es igual que el que tiene, elimina este campo, ya que no se actualizará
-        if (productoDB.title === request.body.title) {
-            delete campos.title;
-        }  else {
+        // Si el nombre del producto es distinto al que tiene 
+        if (productoDB.title !== title) {
             const existeNombre = await Producto.findOne({
                 title: request.body.title
             })
@@ -82,6 +80,9 @@ const actualizarProducto = async (request, response) => {
                 })
             }
         }
+
+        // Nombre del producto que quiero actualizar
+        campos.title = title;
         
         // new: true - para indicar que siempre regrese el nuevo
         const productoActualizado = await Producto.findByIdAndUpdate(uid, campos, { new: true });
