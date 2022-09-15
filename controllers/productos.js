@@ -1,13 +1,10 @@
-const { response } = require('express');
-const { validationResult } = require('express-validator');
-
 // Modelo
 const Producto = require('../models/producto');
 
 // Obtener productos
 const getProductos = async (request, response) => {
     // Obtener todos los productos
-    const productos = await Producto.find({}, 'title price description');
+    const productos = await Producto.find({}, 'title price description image');
 
     response.json({
         ok: true,
@@ -15,11 +12,39 @@ const getProductos = async (request, response) => {
     })
 }
 
+// Obtener un producto
+const getProducto = async (request, response) => {
+    const uid = request.params.id;
+
+    try {
+        const productoDB = await Producto.findById(uid);
+
+        if (!productoDB) {
+            return response.status(404).json({
+                ok: false,
+                msg: 'No se encuentra el producto por ese id'
+            })
+        }
+
+        response.json({
+            ok: true,
+            productoDB
+        })
+    } catch (error) {
+        console.log(error);
+        // 500 - error interno
+        response.status(500).json({
+            ok: false,
+            msg: 'Error inesperado...'
+        })
+    }
+}
+
 // Crear producto
 const crearProducto = async (request, response) => {
     // console.log(request.body);
     // Traemos los valores
-    const { title, price, description } = request.body;
+    const { title } = request.body;
 
     try {
         // Busca un titulo con el mismo nombre y te manda un valor boolean
@@ -138,6 +163,7 @@ const borrarProducto = async (request, response) => {
 
 module.exports = {
     getProductos,
+    getProducto,
     crearProducto,
     actualizarProducto,
     borrarProducto
